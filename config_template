@@ -1,0 +1,25 @@
+safe do
+ 
+  local :path => "/backup/:kind/:id"
+ 
+  glacier do
+    key "...................."
+    secret "........................................"
+    vault "Testes_daniel"
+    path "servers/alpha/:kind/:id"
+  end
+ 
+  keep do
+    local 20
+    glacier 100
+  end
+ 
+  tar do
+    options "-h" # dereference symlinks
+   
+    archive "testes" do
+      files "/home/daniel/algumacoisa/"
+    end
+ 
+  end
+end

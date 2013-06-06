@@ -7,11 +7,6 @@ module Astrails
         
       MAX_GLACIER_FILE_SIZE = 5368709120
       
-      SECRET_KEY = 'aRHVygLm5oa/auAQaNDD4+a9r2csBk8aLAkTv40G'
-      KEY = 'AKIAINEDU3HTN2KRU3MQ'  
-        
-      VAULT_NAME = 'bucket'  
-      
       protected
 
       def active?
@@ -24,7 +19,7 @@ module Astrails
 
       def save
         # FIXME: user friendly error here :)
-        raise RuntimeError, "pipe-streaming not supported for S3." unless @backup.path
+        raise RuntimeError, "pipe-streaming not supported for glacer." unless @backup.path
 
         # needed in cleanup even on dry run
         #AWS::S3::Base.establish_connection!(:access_key_id => key, :secret_access_key => secret, :use_ssl => true) unless local_only?
@@ -37,13 +32,13 @@ module Astrails
             return
           end
           benchmark = Benchmark.realtime do
-            glacier = Fog::AWS::Glacier.new( :access_key_id => KEY,
-                                        :secret_access_key => SECRET_KEY)
+            glacier = Fog::AWS::Glacier.new( :access_key_id => key,
+                                        :secret_access_key => secret)
 
             #AWS::S3::Bucket.create(bucket) unless bucket_exists?(bucket)
             
-            if glacier.vaults.get(VAULT_NAME) == nil
-                vault = glacier.vaults.create :id => VAULT_NAME
+            if glacier.vaults.get(bucket) == nil
+                vault = glacier.vaults.create :id => bucket
             end
             
             File.open(@backup.path) do |file|
@@ -79,15 +74,15 @@ module Astrails
 
     #--------- TODO: EDIT -----------
       def bucket
-        config[:s3, :bucket]
+        config[:glacier, :bucket]
       end
 
       def key
-        config[:s3, :key]
+        config[:glacier, :key]
       end
 
       def secret
-        config[:s3, :secret]
+        config[:glacier, :secret]
       end
 
       private
