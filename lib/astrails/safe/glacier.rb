@@ -39,7 +39,6 @@ module Astrails
           benchmark = Benchmark.realtime do
             glacier = Fog::AWS::Glacier.new( :access_key_id => KEY,
                                         :secret_access_key => SECRET_KEY)
-            vault = glacier.vaults.create :id => VAULT_NAME
 
             #AWS::S3::Bucket.create(bucket) unless bucket_exists?(bucket)
             
