@@ -72,7 +72,6 @@ module Astrails
       end
 
 
-    #--------- TODO: EDIT -----------
       def bucket
         config[:glacier, :bucket]
       end
@@ -85,17 +84,6 @@ module Astrails
         config[:glacier, :secret]
       end
 
-      private
-      
-      def bucket_exists?(bucket)
-            true if AWS::S3::Bucket.find(bucket)
-          rescue AWS::S3::NoSuchBucket
-            false
-      end
-    #--------------------------------
-
-      
-      
     end
   end
 end
