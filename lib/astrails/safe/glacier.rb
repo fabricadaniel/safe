@@ -14,12 +14,12 @@ module Astrails
       end
 
       def path
-        @path ||= expand(config[:aws, :path] || config[:local, :path] || ":kind/:id")
+        @path ||= expand(config[:glacier, :path] || config[:local, :path] || ":kind/:id")
       end
 
       def save
         # FIXME: user friendly error here :)
-        raise RuntimeError, "pipe-streaming not supported for glacer." unless @backup.path
+        raise RuntimeError, "pipe-streaming not supported for glacier." unless @backup.path
 
         # needed in cleanup even on dry run
         #AWS::S3::Base.establish_connection!(:access_key_id => key, :secret_access_key => secret, :use_ssl => true) unless local_only?
@@ -55,7 +55,7 @@ module Astrails
       def cleanup
         return if local_only?
 
-        return unless keep = config[:keep, :s3]
+        return unless keep = config[:keep, :glacier]
 
         #puts "listing files: #{bucket}:#{base}*" if verbose?
         #files = AWS::S3::Bucket.objects(bucket, :prefix => base, :max_keys => keep * 2)

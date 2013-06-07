@@ -55,7 +55,7 @@ module Astrails
       ].each do |klass, path|
         if collection = config[*path]
           collection.each do |name, c|
-            klass.new(name, c).backup.run(c, :gpg, :gzip, :local, :s3, :cloudfiles, :sftp, :ftp)
+            klass.new(name, c).backup.run(c, :gpg, :gzip, :local, :s3, :glacier, :cloudfiles, :sftp, :ftp)
           end
         end
       end
