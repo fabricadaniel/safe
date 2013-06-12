@@ -32,6 +32,7 @@ require 'astrails/safe/gzip'
 
 require 'astrails/safe/sink'
 require 'astrails/safe/local'
+require 'astrails/safe/glacier'
 require 'astrails/safe/s3'
 require 'astrails/safe/cloudfiles'
 require 'astrails/safe/sftp'
