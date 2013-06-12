@@ -14,6 +14,18 @@ module Astrails
       def path
         @path ||= expand(config[:glacier, :path] || config[:local, :path] || ":kind/:id")
       end
+      
+      def vault
+        config[:glacier, :vault]
+      end
+
+      def key
+        config[:glacier, :key]
+      end
+
+      def secret
+        config[:glacier, :secret]
+      end
 
       def save
         raise RuntimeError, "pipe-streaming not supported for glacier." unless @backup.path
@@ -62,20 +74,7 @@ module Astrails
         #  AWS::S3::Bucket.objects(bucket, :prefix => f)[0].delete unless dry_run? || local_only?
         #end
       end
-
-
-      def vault
-        config[:glacier, :vault]
-      end
-
-      def key
-        config[:glacier, :key]
-      end
-
-      def secret
-        config[:glacier, :secret]
-      end
-
+      
     end
   end
 end

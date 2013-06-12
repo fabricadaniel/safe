@@ -67,12 +67,12 @@ module Astrails
         end
 
         simple_value :verbose, :dry_run, :local_only, :path, :command,
-          :options, :user, :host, :port, :password, :key, :secret, :bucket,
-          :api_key, :container, :socket, :service_net, :repo_path
+          :options, :user, :host, :port, :password, :key, :secret, :bucket, 
+          :api_key, :container, :socket, :service_net, :repo_path, :vault
         multi_value :skip_tables, :exclude, :files
         hash_value :mysqldump, :tar, :gpg, :keep, :pgdump, :tar, :svndump,
           :sftp, :ftp, :mongodump
-        mixed_value :s3,:glacier, :local, :cloudfiles
+        mixed_value :s3, :glacier, :local, :cloudfiles
         collection :database, :archive, :repo
 
         private
