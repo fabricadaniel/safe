@@ -51,9 +51,9 @@ def main
 
     die "Created default #{config_file}. Please edit and run again."
   end
-
   config = eval(File.read(config_file))
 
+  
   config[:verbose]    = is_verbose
   config[:dry_run]    = is_dry
   config[:local_only] = is_local_only

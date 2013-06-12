@@ -28,7 +28,7 @@ module Astrails
         unless dry_run? || local_only?
           fileSize = File.stat(@backup.path).size
           if fileSize > MAX_GLACIER_FILE_SIZE
-            STDERR.puts "ERROR: File size exceeds maximum allowed for upload to S3 (#{MAX_GLACIER_FILE_SIZE}): #{@backup.path}"
+            STDERR.puts "ERROR: File size exceeds maximum allowed for upload to Glacier (#{MAX_GLACIER_FILE_SIZE}): #{@backup.path}"
             return
           end
           benchmark = Benchmark.realtime do

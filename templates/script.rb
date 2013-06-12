@@ -18,6 +18,14 @@ safe do
     path "/backup/:kind"
   end
 
+  ## uncomment to enable uploads to Glacier
+  glacier do
+     #key YOUR_S3_KEY
+     #secret YOUR_S3_SECRET
+     #bucket S3_BUCKET
+     #path ":kind/" # this is default
+  end
+
   ## uncomment to enable uploads to Amazon S3
   ## Amazon S3 auth (optional)
   # s3 do

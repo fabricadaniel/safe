@@ -18,6 +18,13 @@ describe Astrails::Safe::Config do
         bucket "bucket"
         path "path1"
       end
+      
+      glacier do
+        key "glacier key"
+        secret "secret"
+        bucket "bucket"
+        path "path1"
+      end
 
       sftp do
         user "sftp user"
@@ -123,6 +130,13 @@ describe Astrails::Safe::Config do
 
       "s3" => {
         "key" => "s3 key",
+        "secret" => "secret",
+        "bucket" => "bucket",
+        "path" => "path1",
+      },
+      
+      "glacier" => {
+        "key" => "glacier key",
         "secret" => "secret",
         "bucket" => "bucket",
         "path" => "path1",
@@ -273,12 +287,14 @@ describe Astrails::Safe::Config do
   it 'should accept multiple levels of data hash' do
     config = Astrails::Safe::Config::Node.new nil, tar: {
       s3: { bucket: '_bucket', key: '_key', secret: '_secret', },
+      glacier: { bucket: '_bucket', key: '_key', secret: '_secret', },
       keep: { s3: 2 }
     }
 
     config.to_hash.should == {
       'tar' => {
         's3' => { 'bucket' => '_bucket', 'key' => '_key', 'secret' => '_secret', },
+        'glacier' => { 'bucket' => '_bucket', 'key' => '_key', 'secret' => '_secret', },
         'keep' => { 's3' => 2 }
       }
     }
