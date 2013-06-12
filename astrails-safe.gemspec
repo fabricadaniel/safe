@@ -25,6 +25,7 @@ DESC
   spec.require_paths = ["lib"]
 
   spec.add_dependency "aws-s3"
+  spec.add_dependency "fog"
   spec.add_dependency "cloudfiles"
   spec.add_dependency "net-sftp"
 
