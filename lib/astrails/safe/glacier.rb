@@ -5,8 +5,6 @@ module Astrails
   module Safe
     class Glacier < Sink
         
-      MAX_GLACIER_FILE_SIZE = 5368709120
-      
       protected
 
       def active?
@@ -27,22 +25,22 @@ module Astrails
         puts "Uploading #{bucket}:#{full_path}" if verbose? || dry_run?
         unless dry_run? || local_only?
           fileSize = File.stat(@backup.path).size
-          if fileSize > MAX_GLACIER_FILE_SIZE
-            STDERR.puts "ERROR: File size exceeds maximum allowed for upload to Glacier (#{MAX_GLACIER_FILE_SIZE}): #{@backup.path}"
-            return
-          end
+          
           benchmark = Benchmark.realtime do
-            glacier = Fog::AWS::Glacier.new( :aws_access_key_id => key,
-                                        :aws_secret_access_key => secret)
+            glacier = Fog::AWS::Glacier.new(:aws_access_key_id => key,
+                                            :aws_secret_access_key => secret)
 
             #AWS::S3::Bucket.create(bucket) unless bucket_exists?(bucket)
             
-            if glacier.vaults.get(bucket) == nil
+            vault = glacier.vaults.get(bucket)
+            if vault == nil
                 vault = glacier.vaults.create :id => bucket
             end
             
             File.open(@backup.path) do |file|
-              archive1 = vault.archives.create :body => file, :multipart_chunk_size => fileSize
+              archive1 = vault.archives.create(:body => file, 
+                                               :multipart_chunk_size => 1024*1024, 
+                                               :description => "backup")
               puts archive1.inspect
               #AWS::S3::S3Object.store(full_path, file, bucket)
             end
