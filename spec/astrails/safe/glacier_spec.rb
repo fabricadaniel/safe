@@ -5,7 +5,7 @@ describe Astrails::Safe::Glacier do
   def def_config
     {
       :glacier => {
-        :bucket => "_bucket",
+        :vault => "_vault",
         :key    => "_key",
         :secret => "_secret",
       },
@@ -66,8 +66,8 @@ describe Astrails::Safe::Glacier do
       @glacier.should be_active
     end
 
-    it "should be false if bucket is missing" do
-      @glacier.config[:glacier].data["bucket"] = nil
+    it "should be false if vault is missing" do
+      @glacier.config[:glacier].data["vault"] = nil
       @glacier.should_not be_active
     end
 
@@ -111,12 +111,12 @@ describe Astrails::Safe::Glacier do
           #stub(AWS::S3::Base).establish_connection!(:access_key_id => "_key", :secret_access_key => "_secret", :use_ssl => true)
         when :stat
           stub(File).stat("foo").stub!.size {123}
-        when :create_bucket
+        when :create_vault
           #stub(AWS::S3::Bucket).find('_bucket') { raise_error AWS::S3::NoSuchBucket }
           #stub(AWS::S3::Bucket).create
         when :file_open
           #stub(File).open("foo") {|f, block| block.call(:opened_file)}
-        when :s3_store
+        when :glacier_store
           #stub(AWS::S3::S3Object).store(@full_path, :opened_file, "_bucket")
         end
       end

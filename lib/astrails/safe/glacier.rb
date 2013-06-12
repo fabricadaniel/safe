@@ -8,7 +8,7 @@ module Astrails
       protected
 
       def active?
-        bucket && key && secret
+        vault && key && secret
       end
 
       def path
@@ -16,38 +16,32 @@ module Astrails
       end
 
       def save
-        # FIXME: user friendly error here :)
         raise RuntimeError, "pipe-streaming not supported for glacier." unless @backup.path
 
-        # needed in cleanup even on dry run
-        #AWS::S3::Base.establish_connection!(:access_key_id => key, :secret_access_key => secret, :use_ssl => true) unless local_only?
-
-        puts "Uploading #{bucket}:#{full_path}" if verbose? || dry_run?
+        puts "Uploading #{vault}:#{full_path}" if verbose? || dry_run?
         unless dry_run? || local_only?
           fileSize = File.stat(@backup.path).size
           
           benchmark = Benchmark.realtime do
-            glacier = Fog::AWS::Glacier.new(:aws_access_key_id => key,
+          glacier = Fog::AWS::Glacier.new(:aws_access_key_id => key,
                                             :aws_secret_access_key => secret)
-
-            #AWS::S3::Bucket.create(bucket) unless bucket_exists?(bucket)
             
-            vault = glacier.vaults.get(bucket)
-            if vault == nil
-                vault = glacier.vaults.create :id => bucket
-            end
+          myVault = glacier.vaults.get(vault)
+          if myVault == nil
+            myVault = glacier.vaults.create :id => vault
+          end
             
-            File.open(@backup.path) do |file|
-              archive1 = vault.archives.create(:body => file, 
+          File.open(@backup.path) do |file|
+            archive1 = myVault.archives.create(:body => file, 
                                                :multipart_chunk_size => 1024*1024, 
                                                :description => "backup")
-              puts archive1.inspect
-              #AWS::S3::S3Object.store(full_path, file, bucket)
-            end
+            puts archive1.inspect
           end
-          puts "...done" if verbose?
-          puts("Upload took " + sprintf("%.2f", benchmark) + " second(s).") if verbose?
         end
+        
+        puts "...done" if verbose?
+        puts("Upload took " + sprintf("%.2f", benchmark) + " second(s).") if verbose? end
+        
       end
 
       def cleanup
@@ -70,8 +64,8 @@ module Astrails
       end
 
 
-      def bucket
-        config[:glacier, :bucket]
+      def vault
+        config[:glacier, :vault]
       end
 
       def key
